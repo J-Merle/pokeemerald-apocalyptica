@@ -392,6 +392,11 @@ extern const u8 gText_DefaultNameLillie[];
 extern const u8 gText_DefaultNameTerra[];
 extern const u8 gText_DefaultNameLucy[];
 extern const u8 gText_DefaultNameHalie[];
+// New game ovverides
+extern const u8 gText_Birch_WhichPokemon[];
+extern const u8 gText_Starter1[];
+extern const u8 gText_Starter2[];
+extern const u8 gText_Starter3[];
 
 extern const u8 gText_BirchInTrouble[];
 extern const u8 gText_ConfirmStarterChoice[];

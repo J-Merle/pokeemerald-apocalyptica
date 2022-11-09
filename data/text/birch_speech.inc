@@ -59,3 +59,8 @@ gText_Birch_AreYouReady::
 	.string "Well, I'll be expecting you later.\n"
 	.string "Come see me in my POKéMON LAB.\p"
 	.string "$"
+
+gText_Birch_WhichPokemon::
+	.string "Quel pokémon t'accompagne ?\n"
+	.string "$"
+
