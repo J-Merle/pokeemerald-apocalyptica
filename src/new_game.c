@@ -126,7 +126,7 @@ static void ClearFrontierRecord(void)
 
 static void WarpToTruck(void)
 {
-    SetWarpDestination(MAP_GROUP(PONTAROC_LAB), MAP_NUM(PONTAROC_LAB), WARP_ID_NONE, -1, -1);
+    SetWarpDestination(MAP_GROUP(PONTAROC_LAB), MAP_NUM(PONTAROC_LAB), WARP_ID_NONE, 8, 6);
     WarpIntoMap();
 }
 
@@ -192,7 +192,6 @@ void NewGameInitData(void)
     InitDewfordTrend();
     ResetFanClub();
     ResetLotteryCorner();
-    WarpToTruck();
     RunScriptImmediately(EventScript_ResetAllMapFlags);
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
@@ -204,6 +203,7 @@ void NewGameInitData(void)
     WipeTrainerNameRecords();
     ResetTrainerHillResults();
     ResetContestLinkResults();
+    WarpToTruck();
 }
 
 static void ResetMiniGamesRecords(void)

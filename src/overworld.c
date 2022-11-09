@@ -888,6 +888,11 @@ void ResetInitialPlayerAvatarState(void)
     sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ON_FOOT;
 }
 
+void ForceDirectionEast(void)
+{
+    sInitialPlayerAvatarState.direction = DIR_EAST;
+}
+
 void StoreInitialPlayerAvatarState(void)
 {
     sInitialPlayerAvatarState.direction = GetPlayerFacingDirection();
@@ -1531,6 +1536,7 @@ void CB2_NewGame(void)
     ResetSafariZoneFlag_();
     NewGameInitData();
     ResetInitialPlayerAvatarState();
+    ForceDirectionEast();
     PlayTimeCounter_Start();
     ScriptContext_Init();
     UnlockPlayerFieldControls();
