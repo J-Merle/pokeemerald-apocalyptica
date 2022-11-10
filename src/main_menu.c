@@ -1724,12 +1724,13 @@ static void Task_NewGameBirchSpeech_ShowStarter(u8 taskId) {
     gSprites[spriteId].oam.priority = 0;
     gSprites[spriteId].data[0] = 0;
 
+    PlayCry_Normal(specie, 0);
     gTasks[taskId].func = Task_NewGameBirchSpeech_ChooseStarter;
 }
 
 static void Task_NewGameBirchSpeech_ChooseStarter(u8 taskId) {
 
-    int starter = NewGameBirchSpeech_ProcessGenderMenuInput();
+    int starter = Menu_ProcessInputNoWrap();
     int starter2;
     u8 spriteId;
 
