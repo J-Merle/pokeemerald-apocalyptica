@@ -1,42 +1,35 @@
 const PROF_BIRCH_ID = 1
 
 mapscripts Pontaroc_Lab_MapScripts {
-	MAP_SCRIPT_ON_TRANSITION {
-		setvar(VAR_TEMP_0, 1)
-	}
-	MAP_SCRIPT_ON_FRAME_TABLE [
-		VAR_TEMP_0, 1: Pontaroc_Lab_EventScript_init
-	]
+    MAP_SCRIPT_ON_FRAME_TABLE [
+	VAR_BIRCH_LAB_STATE, 0: Pontaroc_Lab_EventScript_BirchWelcome
+    ]
 }
 
-script Pontaroc_Lab_EventScript_init {
+script Pontaroc_Lab_EventScript_BirchWelcome {
 	lockall
 	setflag(FLAG_SYS_B_DASH)
 	setflag(FLAG_SYS_POKEDEX_GET)
 	setflag(FLAG_SYS_POKEMON_GET)
-	givemon(SPECIES_BELDUM, 5, ITEM_POKE_BALL)
 	msgbox(format("Peut-être qu'avec ces nouveaux réglages ..."))
 	waitmessage
-        applymovement(PROF_BIRCH_ID, BirchMovementData)
+	applymovement(PROF_BIRCH_ID, BirchMovementData)
 	waitmovement(0)
-        applymovement(PROF_BIRCH_ID, Pontaroc_Lab_BirchComeToPlayer)
+	msgbox(format("Hmm ... ça n'a pas fonctionné comme prévu !"))
+	waitmessage
+	applymovement(PROF_BIRCH_ID, Pontaroc_Lab_BirchComeToPlayer)
 	waitmovement(0)
 	msgbox(format("Bon très bien {PLAYER}, pour ton premier jour nous allons commencer par quelques formalités"))
 	waitmessage
-	msgbox(format("Tu as un pokémon n'est ce pas ? Pourrais-tu me le montrer ?"))
-	waitmessage
-	showmonpic(SPECIES_BELDUM, 10, 3)
-	msgbox(format("Hmmm je vois ..."))
-	waitmessage
-	hidemonpic
-	setvar(VAR_TEMP_0, 2)
+	setvar(VAR_BIRCH_LAB_STATE, 1)
 	releaseall
 }
 
 movement BirchMovementData {
 	emote_question_mark
-	delay_8
+	delay_16
 	jump_in_place_up
+	delay_8
 	step_end
 }
 
@@ -47,6 +40,6 @@ movement Pontaroc_Lab_PlayerFaceBirch {
 
 movement Pontaroc_Lab_BirchComeToPlayer {
 	walk_right * 3
-	walk_up
+	face_up
 	step_end
 }
