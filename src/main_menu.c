@@ -250,6 +250,7 @@ static void Task_NewGameBirchSpeech_InitChoosePokemon(u8);
 static void Task_NewGameBirchSpeech_CreateStarterMenu(u8 taskId);
 static void Task_NewGameBirchSpeech_ShowStarter(u8 taskId);
 static void Task_NewGameBirchSpeech_ChooseStarter(u8 taskId);
+static void Task_NewGameBirchSpeech_ShowBirch(u8 taskId);
 
 // .rodata
 
@@ -292,6 +293,7 @@ static const u16 sBirchSpeechPlatformBlackPal[] = {RGB_BLACK, RGB_BLACK, RGB_BLA
 #define MENU_SCROLL_SHIFT WIN_RANGE(32, 32)
 
 #define STARTER_MON_COUNT 3
+#define STARTER_WINDOW_ID 3
 
 static const struct WindowTemplate sWindowTemplates_MainMenu[] =
 {
@@ -475,13 +477,6 @@ static const union AffineAnimCmd *const sSpriteAffineAnimTable_PlayerShrink[] =
 static const struct MenuAction sMenuActions_Gender[] = {
     {gText_BirchBoy, NULL},
     {gText_BirchGirl, NULL}
-};
-
-static const u16 sStarterMon[STARTER_MON_COUNT] =
-{
-    SPECIES_ARON,
-    SPECIES_HORSEA,
-    SPECIES_SEEDOT,
 };
 
 static const struct MenuAction sMenuActions_Pokemon[STARTER_MON_COUNT] = {
@@ -1737,21 +1732,12 @@ static void Task_NewGameBirchSpeech_ChooseStarter(u8 taskId) {
     switch (starter)
     {
         case 0:
-            PlaySE(SE_SELECT);
-	    gSpecialVar_Result = gTasks[taskId].tStarterSelected;
-            NewGameBirchSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
-            gTasks[taskId].func = Task_NewGameBirchSpeech_SlidePlatformAway2;
-            break;
         case 1:
-            PlaySE(SE_SELECT);
-	    gSpecialVar_Result = gTasks[taskId].tStarterSelected;
-            NewGameBirchSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
-            gTasks[taskId].func = Task_NewGameBirchSpeech_SlidePlatformAway2;
-            break;
 	case 2:
             PlaySE(SE_SELECT);
 	    gSpecialVar_Result = gTasks[taskId].tStarterSelected;
-            NewGameBirchSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
+            NewGameBirchSpeech_ClearGenderWindow(STARTER_WINDOW_ID, 1);
+	    NewGameBirchSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
             gTasks[taskId].func = Task_NewGameBirchSpeech_SlidePlatformAway2;
             break;
     }
@@ -1765,19 +1751,44 @@ static void Task_NewGameBirchSpeech_ChooseStarter(u8 taskId) {
 
 	gTasks[taskId].tStarterSelected = starter2;
 	gTasks[taskId].func = Task_NewGameBirchSpeech_ShowStarter;
+	// @IMPROVEMENT Fade in and out starters like for gender
     }
 }
 
 static void Task_NewGameBirchSpeech_SlidePlatformAway2(u8 taskId)
 {
-    if (gTasks[taskId].tBG1HOFS)
-    {
-        gTasks[taskId].tBG1HOFS += 2;
-        SetGpuReg(REG_OFFSET_BG1HOFS, gTasks[taskId].tBG1HOFS);
+    if (gTasks[taskId].tIsDoneFadingSprites) {
+	u8 spriteId = gTasks[taskId].tPlayerSpriteId;
+	if (gSprites[spriteId].x  > 140)
+	{
+	    gTasks[taskId].tBG1HOFS += 2;
+	    SetGpuReg(REG_OFFSET_BG1HOFS, gTasks[taskId].tBG1HOFS);
+	    gSprites[spriteId].x -= 2;
+	}
+	else
+	{
+	    gTasks[taskId].func = Task_NewGameBirchSpeech_ShowBirch;
+	}
     }
-    else
-    {
-        gTasks[taskId].func = Task_NewGameBirchSpeech_ReshowBirchLotad;
+}
+
+// Hide player and starter to show Birch
+static void Task_NewGameBirchSpeech_ShowBirch(u8 taskId) {
+
+    if (gTasks[taskId].tIsDoneFadingSprites) {
+	u8 spriteId;
+
+	gSprites[gTasks[taskId].tStarterSpriteId].invisible = TRUE;
+	spriteId = gTasks[taskId].tBirchSpriteId;
+	gSprites[spriteId].x = 100;
+	gSprites[spriteId].y = 60;
+	gSprites[spriteId].invisible = FALSE;
+	gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+	NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
+	NewGameBirchSpeech_ClearWindow(0);
+	StringExpandPlaceholders(gStringVar4, gText_Birch_YourePlayer);
+	AddTextPrinterForMessage(TRUE);
+	gTasks[taskId].func = Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter;
     }
 }
 
@@ -1789,6 +1800,7 @@ static void Task_NewGameBirchSpeech_ReshowBirchLotad(u8 taskId)
 
 	gSprites[gTasks[taskId].tBrendanSpriteId].invisible = TRUE;
 	gSprites[gTasks[taskId].tMaySpriteId].invisible = TRUE;
+	gSprites[gTasks[taskId].tStarterSpriteId].invisible = TRUE;
 	spriteId = gTasks[taskId].tBirchSpriteId;
 	gSprites[spriteId].x = 136;
 	gSprites[spriteId].y = 60;
