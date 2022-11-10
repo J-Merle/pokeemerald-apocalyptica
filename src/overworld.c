@@ -1,4 +1,5 @@
 #include "global.h"
+#include "starter_choose.h"
 #include "overworld.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
@@ -60,6 +61,7 @@
 #include "wild_encounter.h"
 #include "frontier_util.h"
 #include "constants/abilities.h"
+#include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/map_types.h"
 #include "constants/region_map_sections.h"
@@ -888,11 +890,6 @@ void ResetInitialPlayerAvatarState(void)
     sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ON_FOOT;
 }
 
-void ForceDirectionEast(void)
-{
-    sInitialPlayerAvatarState.direction = DIR_EAST;
-}
-
 void StoreInitialPlayerAvatarState(void)
 {
     sInitialPlayerAvatarState.direction = GetPlayerFacingDirection();
@@ -1531,16 +1528,22 @@ static bool8 RunFieldCallback(void)
 
 void CB2_NewGame(void)
 {
+    u16 starterMon;
+
     FieldClearVBlankHBlankCallbacks();
     StopMapMusic();
     ResetSafariZoneFlag_();
     NewGameInitData();
+    // Give the starter selected during the intro
+    *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
+    starterMon = GetStarterPokemon(gSpecialVar_Result);
+    ScriptGiveMon(starterMon, 5, ITEM_NONE, 0, 0, 0);
+
+
     ResetInitialPlayerAvatarState();
-    ForceDirectionEast();
     PlayTimeCounter_Start();
     ScriptContext_Init();
     UnlockPlayerFieldControls();
-    //gFieldCallback = ExecuteTruckSequence;
     gFieldCallback2 = NULL;
     DoMapLoadLoop(&gMain.state);
     SetFieldVBlankCallback();

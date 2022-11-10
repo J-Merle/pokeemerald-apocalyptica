@@ -1,4 +1,5 @@
 #include "global.h"
+#include "starter_choose.h"
 #include "trainer_pokemon_sprites.h"
 #include "bg.h"
 #include "constants/rgb.h"
@@ -1713,7 +1714,7 @@ static void Task_NewGameBirchSpeech_CreateStarterMenu(u8 taskId)
 }
 
 static void Task_NewGameBirchSpeech_ShowStarter(u8 taskId) {
-    u16 specie = sStarterMon[gTasks[taskId].tStarterSelected];
+    u16 specie = GetStarterPokemon(gTasks[taskId].tStarterSelected);
     u8 spriteId = CreateMonPicSprite_Affine(specie, SHINY_ODDS, 0, MON_PIC_AFFINE_FRONT, 100, 0x4B, 15, TAG_NONE);
     gTasks[taskId].tStarterSpriteId = spriteId;
 
@@ -1736,21 +1737,31 @@ static void Task_NewGameBirchSpeech_ChooseStarter(u8 taskId) {
     {
         case 0:
             PlaySE(SE_SELECT);
+	    gSpecialVar_Result = gTasks[taskId].tStarterSelected;
+            NewGameBirchSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
+            gTasks[taskId].func = Task_NewGameBirchSpeech_SlidePlatformAway2;
             break;
         case 1:
             PlaySE(SE_SELECT);
+	    gSpecialVar_Result = gTasks[taskId].tStarterSelected;
+            NewGameBirchSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
             gTasks[taskId].func = Task_NewGameBirchSpeech_SlidePlatformAway2;
             break;
 	case 2:
             PlaySE(SE_SELECT);
+	    gSpecialVar_Result = gTasks[taskId].tStarterSelected;
+            NewGameBirchSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
+            gTasks[taskId].func = Task_NewGameBirchSpeech_SlidePlatformAway2;
             break;
     }
     starter2 = Menu_GetCursorPos();
     if (starter2 != gTasks[taskId].tStarterSelected) {
+	// Hide sprite and free it	
         gSprites[gTasks[taskId].tStarterSpriteId].invisible = TRUE;
         spriteId = gTasks[taskId].tStarterSpriteId;
         FreeOamMatrix(gSprites[spriteId].oam.matrixNum);
         FreeAndDestroyMonPicSprite(spriteId);
+
 	gTasks[taskId].tStarterSelected = starter2;
 	gTasks[taskId].func = Task_NewGameBirchSpeech_ShowStarter;
     }
@@ -1771,26 +1782,29 @@ static void Task_NewGameBirchSpeech_SlidePlatformAway2(u8 taskId)
 
 static void Task_NewGameBirchSpeech_ReshowBirchLotad(u8 taskId)
 {
-    u8 spriteId;
+    if (gTasks[taskId].tIsDoneFadingSprites) {
 
-    gSprites[gTasks[taskId].tBrendanSpriteId].invisible = TRUE;
-    gSprites[gTasks[taskId].tMaySpriteId].invisible = TRUE;
-    spriteId = gTasks[taskId].tBirchSpriteId;
-    gSprites[spriteId].x = 136;
-    gSprites[spriteId].y = 60;
-    gSprites[spriteId].invisible = FALSE;
-    gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-    spriteId = gTasks[taskId].tLotadSpriteId;
-    gSprites[spriteId].x = 100;
-    gSprites[spriteId].y = 75;
-    gSprites[spriteId].invisible = FALSE;
-    gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-    NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
-    NewGameBirchSpeech_StartFadePlatformOut(taskId, 1);
-    NewGameBirchSpeech_ClearWindow(0);
-    StringExpandPlaceholders(gStringVar4, gText_Birch_YourePlayer);
-    AddTextPrinterForMessage(TRUE);
-    gTasks[taskId].func = Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter;
+	u8 spriteId;
+
+	gSprites[gTasks[taskId].tBrendanSpriteId].invisible = TRUE;
+	gSprites[gTasks[taskId].tMaySpriteId].invisible = TRUE;
+	spriteId = gTasks[taskId].tBirchSpriteId;
+	gSprites[spriteId].x = 136;
+	gSprites[spriteId].y = 60;
+	gSprites[spriteId].invisible = FALSE;
+	gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+	spriteId = gTasks[taskId].tLotadSpriteId;
+	gSprites[spriteId].x = 100;
+	gSprites[spriteId].y = 75;
+	gSprites[spriteId].invisible = FALSE;
+	gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+	NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
+	NewGameBirchSpeech_StartFadePlatformOut(taskId, 1);
+	NewGameBirchSpeech_ClearWindow(0);
+	StringExpandPlaceholders(gStringVar4, gText_Birch_YourePlayer);
+	AddTextPrinterForMessage(TRUE);
+	gTasks[taskId].func = Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter;
+    }
 }
 
 static void Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter(u8 taskId)
@@ -1891,6 +1905,7 @@ static void Task_NewGameBirchSpeech_Cleanup(u8 taskId)
     {
         FreeAllWindowBuffers();
         FreeAndDestroyMonPicSprite(gTasks[taskId].tLotadSpriteId);
+        FreeAndDestroyMonPicSprite(gTasks[taskId].tStarterSpriteId);
         ResetAllPicSprites();
         SetMainCallback2(CB2_NewGame);
         DestroyTask(taskId);
@@ -2027,6 +2042,8 @@ static void AddBirchSpeechObjects(u8 taskId)
 #undef tLotadSpriteId
 #undef tBrendanSpriteId
 #undef tMaySpriteId
+#undef tStarterSelected
+#undef tStarterSpriteId
 
 #define tMainTask data[0]
 #define tAlphaCoeff1 data[1]
