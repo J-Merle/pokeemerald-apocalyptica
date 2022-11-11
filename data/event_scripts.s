@@ -1062,3 +1062,5 @@ Common_EventScript_LegendaryFlewAway::
 	.include "data/maps/Pontaroc_Lab/scripts.inc"
 
 	.include "data/maps/PontarocTown/scripts.inc"
+
+	.include "data/maps/Pontaroc_PokemonCenter/scripts.inc"

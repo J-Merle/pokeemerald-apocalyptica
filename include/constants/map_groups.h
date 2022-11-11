@@ -66,7 +66,8 @@
 #define MAP_PONTAROC_TOWN       (57 | (0 << 8))
 
 // gMapGroup_IndoorPontaroc
-#define MAP_PONTAROC_LAB (0 | (1 << 8))
+#define MAP_PONTAROC_LAB            (0 | (1 << 8))
+#define MAP_PONTAROC_POKEMON_CENTER (1 | (1 << 8))
 
 // gMapGroup_IndoorLittleroot
 #define MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F    (0 | (2 << 8))

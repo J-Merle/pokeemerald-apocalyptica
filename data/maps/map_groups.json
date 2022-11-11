@@ -98,7 +98,8 @@
     "PontarocTown"
   ],
   "gMapGroup_IndoorPontaroc": [
-    "Pontaroc_Lab"
+    "Pontaroc_Lab",
+    "Pontaroc_PokemonCenter"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",
