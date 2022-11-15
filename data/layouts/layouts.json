@@ -4450,6 +4450,16 @@
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/Route1/border.bin",
       "blockdata_filepath": "data/layouts/Route1/map.bin"
+    },
+    {
+      "id": "LAYOUT_ROUTE1_RANGER_HOUSE",
+      "name": "Route1_RangerHouse_Layout",
+      "width": 10,
+      "height": 9,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/Route1_RangerHouse/border.bin",
+      "blockdata_filepath": "data/layouts/Route1_RangerHouse/map.bin"
     }
   ]
 }
