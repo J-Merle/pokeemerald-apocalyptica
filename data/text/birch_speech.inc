@@ -32,32 +32,27 @@ gText_Birch_AndYouAre::
 	.string "And you are?$"
 
 gText_Birch_BoyOrGirl::
-	.string "Are you a boy?\n"
-	.string "Or are you a girl?$"
+	.string "Est-tu un garçon ou une fille ?$"
 
 gText_Birch_WhatsYourName::
-	.string "All right.\n"
-	.string "What's your name?$"
+	.string "Très bien.\n"
+	.string "Quel-est ton nom ?$"
 
 gText_Birch_SoItsPlayer::
-	.string "So it's {PLAYER}{KUN}?$"
+	.string "Tu es {PLAYER}{KUN} c'est ça ?$"
 
 gText_Birch_YourePlayer::
-	.string "Ah, okay!\p"
-	.string "You're {PLAYER}{KUN} who's moving to my\n"
-	.string "hometown of LITTLEROOT.\l"
-	.string "I get it now!\p"
+	.string "Ah bonjour {PLAYER}{KUN} ! Je suis heureux\n"
+	.string "d'avoir un nouvel assistant.\p"
+	.string "Je suis sûr que nous allons accomplir\n"
+	.string "de grandes choses tous les deux.\p"
 	.string "$"
 
 gText_Birch_AreYouReady::
-	.string "All right, are you ready?\p"
-	.string "Your very own adventure is about\n"
-	.string "to unfold.\p"
-	.string "Take courage, and leap into the\n"
-	.string "world of POKéMON where dreams,\l"
-	.string "adventure, and friendships await!\p"
-	.string "Well, I'll be expecting you later.\n"
-	.string "Come see me in my POKéMON LAB.\p"
+	.string "Ne perdons pas de temps et mettons nous\n"
+	.string "vite au travail.\l"
+	.string "Mes recherches ne vont pas avancer\l"
+	.string "toutes seules.\p"
 	.string "$"
 
 gText_Birch_WhichPokemon::
