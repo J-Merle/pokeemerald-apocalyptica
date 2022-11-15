@@ -1,0 +1,14 @@
+
+mapscripts PontarocTown_MapScripts {}
+
+script Pontaroc_EventScript_Boy {
+	lockall
+	msgbox(format("Pontaroc est une ville très ancienne"), MSGBOX_NPC)
+	releaseall
+}
+
+script Pontaroc_EventScript_LabSign {
+	lockall
+	msgbox(format("Laboratoire du Proffeseur Sorbiers"), MSGBOX_SIGN)
+	releaseall
+}

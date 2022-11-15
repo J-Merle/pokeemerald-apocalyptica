@@ -20,8 +20,15 @@ script Pontaroc_Lab_EventScript_BirchWelcome {
 	applymovement(PROF_BIRCH_ID, Pontaroc_Lab_BirchComeToPlayer)
 	waitmovement(0)
 	msgbox(format("Bon très bien {PLAYER}, pour ton premier jour nous allons commencer par quelques formalités"))
+	msgbox(format("Il semblerait que les rangers de la Route 1 aient remarqués des choses étranges. Pourrais-tu aller les voir et essayer de tirer ça au clair ?"))
 	waitmessage
 	setvar(VAR_BIRCH_LAB_STATE, 1)
+	releaseall
+}
+
+script Pontaroc_Lab_EventScript_RangerLocation {
+	lockall
+	msgbox(format("Les rangers sont sur la Route 1, ne traîne pas en chemin."), MSGBOX_NPC)
 	releaseall
 }
 
@@ -33,13 +40,14 @@ movement BirchMovementData {
 	step_end
 }
 
-movement Pontaroc_Lab_PlayerFaceBirch {
-	face_right
-	step_end
-}
-
 movement Pontaroc_Lab_BirchComeToPlayer {
 	walk_right * 3
 	face_up
 	step_end
+}
+
+script Pontaroc_Lab_EventScript_Machine {
+	lockall
+	msgbox(format("C'est une machine très compliquée, je ferais mieux de ne pas y toucher"))
+	releaseall
 }
