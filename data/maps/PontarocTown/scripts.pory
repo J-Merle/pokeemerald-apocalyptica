@@ -12,3 +12,10 @@ script Pontaroc_EventScript_LabSign {
 	msgbox(format("Laboratoire du Proffeseur Sorbiers"), MSGBOX_SIGN)
 	releaseall
 }
+
+script Pontaroc_EventScript_GymSign {
+	lockall
+    showtrainerteam(TRAINER_LYDIA_4)
+    waitstate
+	releaseall
+}

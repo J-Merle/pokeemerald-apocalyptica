@@ -585,7 +585,7 @@ static void Task_Hof_DisplayMon(u8 taskId)
     if (currMon->species == SPECIES_EGG)
         destY += 10;
 
-    spriteId = CreateMonPicSprite_Affine(currMon->species, currMon->tid, currMon->personality, MON_PIC_AFFINE_FRONT, startX, startY, currMonId, TAG_NONE);
+    spriteId = CreateMonPicSprite_Affine(currMon->species, 0, 0, MON_PIC_AFFINE_FRONT, startX, startY, currMonId, TAG_NONE);
     gSprites[spriteId].tDestinationX = destX;
     gSprites[spriteId].tDestinationY = destY;
     gSprites[spriteId].data[0] = 0;

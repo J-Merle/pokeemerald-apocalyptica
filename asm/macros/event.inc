@@ -2018,3 +2018,10 @@
 	setvar VAR_0x8002, \tryMultiple
 	special TrySpecialOverworldEvo
 	.endm
+
+	@ Displays a box containing the trainer sprite and it's team
+	.macro showtrainerteam trainerId:req
+	.byte 0xe3
+	.2byte \trainerId
+
+	.endm

@@ -68,6 +68,14 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Pontaroc_EventScript_LabSign"
+    },
+    {
+      "type": "sign",
+      "x": 22,
+      "y": 10,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Pontaroc_EventScript_GymSign"
     }
   ]
 }

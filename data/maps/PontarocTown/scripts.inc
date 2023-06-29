@@ -16,6 +16,14 @@ Pontaroc_EventScript_LabSign::
 	return
 
 
+Pontaroc_EventScript_GymSign::
+	lockall
+	showtrainerteam TRAINER_LYDIA_4
+	waitstate
+	releaseall
+	return
+
+
 Pontaroc_EventScript_Boy_Text_0:
 	.string "Pontaroc est une ville très ancienne$"
 

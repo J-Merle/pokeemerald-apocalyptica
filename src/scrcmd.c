@@ -2327,3 +2327,11 @@ bool8 ScrCmd_warpwhitefade(struct ScriptContext *ctx)
     ResetInitialPlayerAvatarState();
     return TRUE;
 }
+
+bool8 ScrCmd_showtrainerteam(struct ScriptContext *ctx)
+{
+    u16 trainer = VarGet(ScriptReadHalfword(ctx));
+
+    ScriptMenu_ShowTrainerTeam(trainer);
+    return FALSE; //@TODO FALSE ?
+}

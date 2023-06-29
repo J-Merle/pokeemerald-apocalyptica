@@ -17,6 +17,8 @@
 #include "constants/items.h"
 #include "constants/script_menu.h"
 #include "constants/songs.h"
+#include "data.h"
+#include "trainer_pokemon_sprites.h"
 
 #include "data/script_menu.h"
 
@@ -27,6 +29,7 @@ static u8 sLilycoveSSTidalSelections[SSTIDAL_SELECTION_COUNT];
 static void Task_HandleMultichoiceInput(u8 taskId);
 static void Task_HandleYesNoInput(u8 taskId);
 static void Task_HandleMultichoiceGridInput(u8 taskId);
+static void Task_DisplayTrainerTeam(u8 taskId);
 static void DrawMultichoiceMenu(u8 left, u8 top, u8 multichoiceId, bool8 ignoreBPress, u8 cursorPos);
 static void InitMultichoiceCheckWrap(bool8 ignoreBPress, u8 count, u8 windowId, u8 multichoiceId);
 static void DrawLinkServicesMultichoiceMenu(u8 multichoiceId);
@@ -35,6 +38,16 @@ static void CreateLilycoveSSTidalMultichoice(void);
 static bool8 IsPicboxClosed(void);
 static void CreateStartMenuForPokenavTutorial(void);
 static void InitMultichoiceNoWrap(bool8 ignoreBPress, u8 unusedCount, u8 windowId, u8 multichoiceId);
+
+static const s16 sPreviewTeamLocation[PARTY_SIZE][2] =
+{
+    {56,     30},
+    {184,    30},
+    {200,    80},
+    {40,     80},
+    {56,     130},
+    {184,    130}
+};
 
 bool8 ScriptMenu_Multichoice(u8 left, u8 top, u8 multichoiceId, bool8 ignoreBPress)
 {
@@ -764,3 +777,85 @@ int ScriptMenu_AdjustLeftCoordFromWidth(int left, int width)
 
     return adjustedLeft;
 }
+
+#define tState    data[0]
+#define tWindowId data[1]
+#define tSpriteNumber data[2]
+#define tTrainerSpriteId data[3]
+#define tMonSpriteId(i)     data[i + 4]
+
+bool8 ScriptMenu_ShowTrainerTeam(u16 trainerId)
+{
+    if (FindTaskIdByFunc(Task_DisplayTrainerTeam) != TASK_NONE)
+    {
+        return FALSE;
+    }
+    else
+    {
+        u8 taskId;
+        u8 i;
+        const struct Trainer *trainer = &gTrainers[trainerId];
+
+        taskId = CreateTask(Task_DisplayTrainerTeam, 80);
+
+        gTasks[taskId].tWindowId = CreateWindowFromRect(0, 0, 24, 15);
+        gTasks[taskId].tSpriteNumber = trainer->partySize;
+        for(i = 0; i < trainer->partySize; i++) {
+
+            u8 startX = sPreviewTeamLocation[i][0];
+            u8 startY = sPreviewTeamLocation[i][1];
+            u8 spriteId = CreateMonSprite_PicBox(trainer->party.NoItemDefaultMoves[i].species, startX, startY, 0);
+            //CreateMonPicSprite_Affine(trainer->party.NoItemDefaultMoves[i].species, 0, 0, MON_PIC_AFFINE_FRONT, startX, startY, 15, TAG_NONE);
+            gSprites[spriteId].callback = SpriteCallbackDummy;
+            gSprites[spriteId].oam.priority = 0;
+
+            gTasks[taskId].tMonSpriteId(i) = spriteId;
+        }
+        gTasks[taskId].tTrainerSpriteId = CreateTrainerPicSprite(trainer->trainerPic, TRUE, 120, 80, 12, TAG_NONE);
+        //AddTextPrinterParameterized(gTasks[taskId].tWindowId, FONT_NORMAL, trainer->trainerName, 1, 1, TEXT_SKIP_DRAW, NULL);
+        SetStandardWindowBorderStyle(gTasks[taskId].tWindowId, TRUE);
+
+
+        return TRUE;
+    }
+}
+
+static void Task_DisplayTrainerTeam(u8 taskId)
+{
+    s8 selection;
+    s16 *data = gTasks[taskId].data;
+    u8 i;
+
+
+    struct Task *task = &gTasks[taskId];
+
+    switch (task->tState)
+    {
+        case 0:
+            task->tState++;
+            break;
+        case 1:
+            selection = Menu_ProcessInput();
+            if (selection == MENU_B_PRESSED)
+            {
+                task->tState++;
+            }
+            // Wait until a button is pressed
+            break;
+        case 2:
+            for(i = 0; i < task->tSpriteNumber; i++) {
+                FreeResourcesAndDestroySprite(&gSprites[task->tMonSpriteId(i)], task->tMonSpriteId(i));
+            }
+            FreeResourcesAndDestroySprite(&gSprites[task->tTrainerSpriteId], task->tTrainerSpriteId);
+            task->tState++;
+            break;
+        case 3:
+            ClearToTransparentAndRemoveWindow(task->tWindowId);
+            DestroyTask(taskId);
+            ScriptContext_Enable();
+            break;
+    }
+}
+
+#undef tState
+#undef tWindowId

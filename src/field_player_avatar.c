@@ -1,4 +1,5 @@
 #include "global.h"
+#include "field_weather.h"
 #include "main.h"
 #include "bike.h"
 #include "event_data.h"
@@ -2134,6 +2135,11 @@ void DoPlayerSpinExit(void)
     Task_DoPlayerSpinExit(CreateTask(Task_DoPlayerSpinExit, 0));
 }
 
+void ShowGymLeader(void)
+{
+    FadeScreen(FADE_TO_BLACK, 0);
+}
+
 bool32 IsPlayerSpinExitActive(void)
 {
     return FuncIsActiveTask(Task_DoPlayerSpinExit);
@@ -2216,3 +2222,5 @@ static u8 TrySpinPlayerForWarp(struct ObjectEvent *object, s16 *delayTimer)
     *delayTimer = 0;
     return sSpinDirections[object->facingDirection];
 }
+
+
